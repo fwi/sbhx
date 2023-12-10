@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"  data-theme="dark">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" th:href="@{webjars/picocss__pico/1.5.10/css/pico.min.css}"/>
+    <script th:src="@{/webjars/htmx.org/1.9.9/dist/htmx.min.js}" defer></script>
+    <title>Spring Boot Xhtml</title>
+</head>
+<body>
+<main class="container">
+    <h1>Server refresh</h1>
+    <div id="notifications">
+    </div>
+    <div class="grid">
+        <div>
+            <input type="text" placeholder="Search servers"
+                name="search"
+                hx-post="/servers"
+                hx-trigger="keyup changed delay:500ms"
+                hx-target="#servers-table"
+                hx-swap="innerHTML"
+                hx-indicator="#search-servers-indicator"
+                >
+        </div>
+        <div>
+            <img id="search-servers-indicator" class="htmx-indicator" src="/svg-loaders/tail-spin.svg">
+        </div>
+    </div>
+    <div hx-get="/servers" hx-trigger="load" hx-swap="outerHTML">
+        Loading servers 
+        <img class="htmx-indicator" src="/svg-loaders/tail-spin.svg">
+    </div>
+    <div style="text-align: end;">
+        <span 
+            style="width: fit-content;"
+            role="button"
+            class="outline"
+            hx-get="/servers?refresh=true" 
+            hx-target="#servers-table"
+            hx-swap="outerHTML"
+            hx-disabled-elt="this"
+            hx-indicator="#refresh-servers-indicator"
+            >
+            Refresh server list
+            <img id="refresh-servers-indicator" class="htmx-indicator" src="/svg-loaders/tail-spin.svg">
+        </span>
+    </div>
+</main>
+</body>
+</html>

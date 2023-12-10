@@ -1,0 +1,4 @@
+# Enable live reload, works together with devtools
+spring.thymeleaf.cache: false
+
+sbhx.response-delay: 500ms
