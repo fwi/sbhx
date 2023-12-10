@@ -43,10 +43,10 @@
 			<version>1.5.10</version>
 		</dependency>
 		<dependency>
-            <groupId>org.webjars.npm</groupId>
-            <artifactId>htmx.org</artifactId>
-            <version>1.9.9</version>
-        </dependency>
+			<groupId>org.webjars.npm</groupId>
+			<artifactId>htmx.org</artifactId>
+			<version>1.9.9</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.apache.commons</groupId>
