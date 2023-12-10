@@ -23,7 +23,8 @@ Documentation:
 
 This project uses the older Sping Boot and Java versions.
 For high-performance, the latest Spring Boot and Java 21 version should be used,
-together with the "virutal threads" option. See for example [sbtreeconf](https://github.com/fwi/sbtreeconf/compare/security...spring-boot-3)
+together with the "virutal threads" option. See for example [sbtreeconf](https://github.com/fwi/sbtreeconf/compare/security...spring-boot-3).
+A Spring Boot extension to support common HTMX functions is also [available](https://github.com/wimdeblauwe/htmx-spring-boot).
 
 Credits:
   - SVG loaders courtesy of https://github.com/SamHerbert/SVG-Loaders
