@@ -1,4 +1,4 @@
-<table id="servers-table" role="grid">
+<table role="grid">
     <thead>
         <th scope="col">Project</th>
         <th scope="col">Refresh</th>
@@ -14,7 +14,6 @@
                         style="margin: 0; padding: 0; width: 66%;"
                         th:hx-post="'/servers/refresh/' + ${server.project}" 
                         th:hx-target="'#refresh-server-time-' + ${server.project}"
-                        hx-swap="outerHTML"
                         th:hx-indicator="'#refresh-server-indicator-' + ${server.project}"
                         hx-disabled-elt="this"
                         >

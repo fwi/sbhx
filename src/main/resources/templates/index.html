@@ -10,24 +10,22 @@
 <body>
 <main class="container">
     <h1>Server refresh</h1>
-    <div id="notifications">
+    <div id="notifications" th:fragment="notifications" hx-swap-oob="true">
+        <input type="text" placeholder="Notifications appear here" readonly/>
     </div>
-    <div class="grid">
-        <div>
-            <input type="text" placeholder="Search servers"
-                name="search"
-                hx-post="/servers"
-                hx-trigger="keyup changed delay:500ms"
-                hx-target="#servers-table"
-                hx-swap="innerHTML"
-                hx-indicator="#search-servers-indicator"
-                >
-        </div>
-        <div>
-            <img id="search-servers-indicator" class="htmx-indicator" src="/svg-loaders/tail-spin.svg">
-        </div>
+    <div id="search-servers-input" th:fragment="search-servers-input" hx-swap-oob="true">
+        <input type="text" placeholder="Search servers"
+            style="width: 33%;"
+            name="search"
+            hx-post="/servers"
+            hx-trigger="keyup changed delay:300ms"
+            hx-target="#servers-table"
+            hx-indicator="#search-servers-indicator"
+            />
+        <img id="search-servers-indicator" class="htmx-indicator" src="/svg-loaders/tail-spin.svg">
     </div>
-    <div hx-get="/servers" hx-trigger="load" hx-swap="outerHTML">
+    </div>
+    <div id="servers-table" hx-get="/servers" hx-trigger="load">
         Loading servers 
         <img class="htmx-indicator" src="/svg-loaders/tail-spin.svg">
     </div>
@@ -38,7 +36,6 @@
             class="outline"
             hx-get="/servers?refresh=true" 
             hx-target="#servers-table"
-            hx-swap="outerHTML"
             hx-disabled-elt="this"
             hx-indicator="#refresh-servers-indicator"
             >

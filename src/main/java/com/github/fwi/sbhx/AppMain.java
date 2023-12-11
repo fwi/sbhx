@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.thymeleaf.spring5.SpringTemplateEngine;
 
 @Configuration
 @EnableAutoConfiguration
@@ -16,8 +17,8 @@ public class AppMain {
     }
 
     @Bean
-	HomeController homeController(SbhxProperties appProps, ServerModel serverModel) {
-		return new HomeController(appProps, serverModel);
+	HomeController homeController(SbhxProperties appProps, ServerModel serverModel, SpringTemplateEngine templateEngine) {
+		return new HomeController(appProps, serverModel, templateEngine);
 	}
 
     @Bean

@@ -3,6 +3,7 @@ package com.github.fwi.sbhx;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Set;
 
 import javax.validation.constraints.NotNull;
 
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring5.SpringTemplateEngine;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,23 +30,42 @@ public class HomeController {
 
 	final SbhxProperties sbhxProperties;
 	final ServerModel serverModel;
+	final SpringTemplateEngine templateEngine;
 
 	@GetMapping("/")
 	public String home() {
-		return "index"; 
+		return "index";
 	}
 
 	@GetMapping("/servers")
-	public String servers(@RequestParam(value = "refresh", required = false) boolean refresh, Model model) {
-		model.addAttribute("servers", refresh ? serverModel.refresh() : serverModel.get());
+	@ResponseBody
+	public String servers(@RequestParam(value = "refresh", required = false) boolean refresh) {
+		
+		var servers = refresh ? serverModel.refresh() : serverModel.get();
 		sleep();
-		return "servers"; 
+		var context = new Context();
+		context.setVariable("servers", servers);
+		var html = templateEngine.process("servers", context);
+		if (refresh) {
+			// Reset the search-input to empty by adding it as a "hx-swap-oob" element.
+			html += getIndexHtml("search-servers-input");
+			// Reset the notifications-area by adding it as a "hx-swap-oob" element.
+			html += getIndexHtml("notifications");
+		}
+		log.trace("Reponse after server refresh:\n{}", html);
+		return html;
+	}
+
+	String getIndexHtml(String fragment) {
+		// this is similar to returning "index :: fragment-name"
+		return "\n" + templateEngine.process("index", Set.of(fragment), new Context());
 	}
 
 	@PostMapping(path = "/servers", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
 	public String searchServers(@RequestParam MultiValueMap<String, String> paramMap, Model model) {
 		model.addAttribute("servers", serverModel.search(paramMap.getFirst("search")));
-		return "servers"; 
+		sleep();
+		return "servers";
 	}
 
 	final DateTimeFormatter REFRESH_TIME_FORMAT = DateTimeFormatter
@@ -61,44 +83,33 @@ public class HomeController {
 		sleep();
 		String html = StringUtils.EMPTY;
 		if ("broken".equals(project)) { // Just for testing
-			html = getNotifHtml("Server " + project + " could not be refreshed.", false);
-			html += getRefreshTimeHtml(project, "Failed");
+			html = "Failed";
+			html += getNotifHtml("Server " + project + " could not be refreshed.", false);
 		} else {
-		server.setRefreshTime(refreshTime);
-			html = getNotifHtml("Server " + project + " refreshed at " + refreshTime, true);
-			html += getRefreshTimeHtml(project, refreshTime);
+			server.setRefreshTime(refreshTime);
+			html = refreshTime;
+			html += getNotifHtml("Server " + project + " refreshed at " + refreshTime, true);
 		}
 		log.debug("Refresh server response html:\n{}", html);
 		return html;
 		/*
 		 * Note: table rows combined with hx-swap-oob is bugged in HTMX, see https://github.com/bigskysoftware/htmx/issues/1043
-		 * For reference, programmatic fragment parsing can be done by injecting
-		 *   	SpringTemplateEngine templateEngine;
-		 * and then 
-		 * 		Context context = new Context();
-		 * 		context.setVariable("server", server);
-		 * 		templateEngine.process("servers", Set.of("server-fresh-time"), context);
-		 * This is similar to:
-		 * 		return "servers.html :: server-fresh-time"; 
 		 */
 	}
 
+	/**
+	 * An "hx-swap-oob" for the notification div.
+	 */
 	String getNotifHtml(String message, boolean valid) {
 		final var notifHtml = """
-			<input id="notifications" hx-swap-oob="true" type="text" placeholder="%s" aria-invalid="%b" readonly/>
+			\n<div id="notifications" hx-swap-oob="true">
+				<input  type="text" placeholder="%s" aria-invalid="%b" readonly/>
+			</div>
 				""";
 		return notifHtml.formatted(message, !valid);
 	}
-	
-	String getRefreshTimeHtml(String project, String time) {
-		final var timeHtml = """
-			<span id="refresh-server-time-%s">%s</span>
-				""";
-		return timeHtml.formatted(project, time);
-	}
 
 	void sleep() {
-
 		if (sbhxProperties.getResponseDelay() != null) {
 			try {
 				Thread.sleep(sbhxProperties.getResponseDelay().toMillis());
