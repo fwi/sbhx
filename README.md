@@ -10,7 +10,7 @@ Use the `run` profile to enable live-reloads of Thymeleaf templates.
 The `run` profile will activate the `test` profile and load test-resources.
 
 ```
-java17
+java21
 mvn spring-boot:run -Prun
 ```
 
@@ -21,9 +21,6 @@ Documentation:
   - https://picocss.com/docs/
   - https://www.thymeleaf.org/documentation.html
 
-This project uses the older Sping Boot and Java versions.
-For high-performance, the latest Spring Boot and Java 21 version should be used,
-together with the "virutal threads" option. See for example [sbtreeconf](https://github.com/fwi/sbtreeconf/compare/security...spring-boot-3).
 A Spring Boot extension to support common HTMX functions is also [available](https://github.com/wimdeblauwe/htmx-spring-boot).
 
 Credits:

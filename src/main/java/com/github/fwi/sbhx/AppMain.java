@@ -1,13 +1,13 @@
 package com.github.fwi.sbhx;
 
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.thymeleaf.spring5.SpringTemplateEngine;
+import org.thymeleaf.spring6.SpringTemplateEngine;
 
-@Configuration
+@SpringBootConfiguration
 @EnableAutoConfiguration
 @EnableConfigurationProperties( SbhxProperties.class )
 public class AppMain {

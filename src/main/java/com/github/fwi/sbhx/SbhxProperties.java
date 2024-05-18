@@ -11,5 +11,5 @@ import lombok.Data;
 public class SbhxProperties {
 
     Duration responseDelay;
-    
+
 }

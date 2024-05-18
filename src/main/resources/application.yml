@@ -1,2 +1,5 @@
 spring.application.name: Spring Boot Htxmx
 spring.main.banner-mode: off
+
+spring.threads.virtual.enabled: true
+spring.main.keep-alive: true
