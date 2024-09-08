@@ -23,6 +23,16 @@ Documentation:
 
 A Spring Boot extension to support common HTMX functions is also [available](https://github.com/wimdeblauwe/htmx-spring-boot).
 
+Dependency versions can be updated using:
+```
+mvn versions:update-parent
+mvn versions:use-latest-versions
+# Delete backup
+mvn versions:commit
+# Rollback
+mvn versions:revert
+```
+
 Credits:
   - SVG loaders courtesy of https://github.com/SamHerbert/SVG-Loaders
   - Favicon courtesy of https://eclipse.org

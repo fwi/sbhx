@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
+import com.github.fwi.sbhx.ServerModel.ServerProperties;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -83,18 +85,27 @@ public class HomeController {
 		sleep();
 		String html = StringUtils.EMPTY;
 		if ("broken".equals(project)) { // Just for testing
-			html = "Failed";
+			server.setRefreshTime("Failed");
+			html = getServerRow(server);
 			html += getNotifHtml("Server " + project + " could not be refreshed.", false);
 		} else {
 			server.setRefreshTime(refreshTime);
-			html = refreshTime;
+			html = getServerRow(server);
 			html += getNotifHtml("Server " + project + " refreshed at " + refreshTime, true);
 		}
 		log.debug("Refresh server response html:\n{}", html);
 		return html;
 		/*
 		 * Note: table rows combined with hx-swap-oob is bugged in HTMX, see https://github.com/bigskysoftware/htmx/issues/1043
+		 * But it appears to be fixed in htmx version 2.x.
 		 */
+	}
+
+	String getServerRow(ServerProperties server) {
+
+		var context = new Context();
+		context.setVariable("server", server);
+		return templateEngine.process("servers", Set.of("server-row"), context);
 	}
 
 	/**
