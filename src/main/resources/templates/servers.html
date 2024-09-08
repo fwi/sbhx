@@ -7,24 +7,26 @@
     </thead>
     <tbody>
         <th:block th:each="server : ${servers}">
-            <tr>
-                <td th:text="${server.project}"></td>
-                <td>
-                    <button 
-                        style="margin: 0; padding: 0; width: 66%;"
-                        th:hx-post="'/servers/refresh/' + ${server.project}" 
-                        th:hx-target="'#refresh-server-time-' + ${server.project}"
-                        th:hx-indicator="'#refresh-server-indicator-' + ${server.project}"
-                        hx-disabled-elt="this"
-                        >
-                        &#x21bb;
-                    </button>
-                </td>
-                <td th:fragment="server-fresh-time">
-                    <span th:id="'refresh-server-time-' + ${server.project}"><th:block th:text="${server.refreshTime}"></th:block></span>
-                    <img th:id="'refresh-server-indicator-' + ${server.project}" class="htmx-indicator" src="/svg-loaders/tail-spin.svg">
-                </td>
-                <td><a th:href="${server.url}" th:text="${server.url}"></a></td>
+            <tr th:id="'server-row-' + ${server.project}">
+                <th:block th:fragment="server-row" >
+                    <td th:text="${server.project}"></td>
+                    <td>
+                        <button 
+                            style="margin: 0; padding: 0; width: 66%;"
+                            th:hx-post="'/servers/refresh/' + ${server.project}" 
+                            th:hx-target="'#server-row-' + ${server.project}"
+                            th:hx-indicator="'#refresh-server-indicator-' + ${server.project}"
+                            hx-disabled-elt="this"
+                            >
+                            &#x21bb;
+                        </button>
+                    </td>
+                    <td>
+                        <th:block th:text="${server.refreshTime}"></th:block>
+                        <img th:id="'refresh-server-indicator-' + ${server.project}" class="htmx-indicator" src="/svg-loaders/tail-spin.svg">
+                    </td>
+                    <td><a th:href="${server.url}" th:text="${server.url}"></a></td>
+                </th:block>
             </tr>
         </th:block>
     </tbody>
